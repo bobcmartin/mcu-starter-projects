@@ -9,6 +9,12 @@ CC = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 SIZE = arm-none-eabi-size
 
+ifeq ($(OS), Windows_NT)
+  MKDIR = gmkdir
+else
+  MKDIR = mkdir
+endif
+
 CFLAGS += -W -Wall --std=gnu11 -Os
 CFLAGS += -fno-diagnostics-show-caret
 CFLAGS += -fdata-sections -ffunction-sections
@@ -33,7 +39,7 @@ SRCS += \
 DEFINES += \
   -D__SAME54P20A__ \
   -DDONT_USE_CMSIS_INIT \
-  -DF_CPU=48000000
+  -DF_CPU=120000000
 
 CFLAGS += $(INCLUDES) $(DEFINES)
 
@@ -58,7 +64,7 @@ $(BUILD)/$(BIN).bin: $(BUILD)/$(BIN).elf
 	@$(CC) $(CFLAGS) $(filter %/$(subst .o,.c,$(notdir $@)), $(SRCS)) -c -o $@
 
 directory:
-	@gmkdir -p $(BUILD)
+	@$(MKDIR) -p $(BUILD)
 
 size: $(BUILD)/$(BIN).elf
 	@echo size:
